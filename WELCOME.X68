@@ -1,9 +1,4 @@
-*-----------------------------------------------------------
-* Program    :Hello World
-* Written by :Iris Favoreal
-* Date       :4/10/19
-* Description:Sample Program 1 for 422 Lab 1
-*-----------------------------------------------------------
+
 CR      EQU    $0D
 LF      EQU    $0A
 
@@ -65,6 +60,7 @@ END_ADDY    DC.B   'Enter ending hex address or 0 to exit: ',0
 GO          DC.B   'This is where program execution begins.',CR,LF,0
 INV         DC.B   'Placeholder warning',CR,LF,0
             END     START        ; last line of source
+
 
 
 
