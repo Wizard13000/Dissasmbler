@@ -1,0 +1,303 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 5/1/2019 7:54:17 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9  * Put program code here
+00001000  33FC A000 0000127A        10      MOVE.W  #$A000,MOCKA --Testing address
+00001008  23FC E2F85000 0000127A    11      MOVE.L  #$E2F85000,(MOCKA)
+00001012                            12      ;Check if a member of Arithmetic Shift
+00001012  303C F000                 13      MOVE.W  #$F000,D0
+00001016  C079 0000127A             14      AND.W   (MOCKA),D0
+0000101C  B07C E000                 15      CMP.W   #$E000,D0
+00001020  6700 0002                 16      BEQ     SHIFT
+00001024                            17      
+00001024                            18  SHIFT
+00001024  6000 0142                 19      BRA     LA
+00001028                            20  BACKSHIFT1
+00001028  6000 010E                 21      BRA     DIRC
+0000102C                            22  BACKSHIFT2
+0000102C  303C 00C0                 23      MOVE.W  #$C0,D0
+00001030  C079 0000127A             24      AND.W   (MOCKA),D0
+00001036  B03C 00C0                 25      CMP.B   #$C0,D0
+0000103A  6700 015C                 26      BEQ     MEMORYSHIFT
+0000103E  6000 00AE                 27      BRA     SIZE
+00001042                            28  BACKSHIFT3
+00001042  6000 0040                 29      BRA     IR
+00001046                            30  SHIFTBACK4
+00001046  6000 000E                 31      BRA     DEST
+0000104A                            32  BACKSHIFT5
+0000104A  0679 0010 0000127A        33      ADD.W   #16,MOCKA
+00001052                            34  BACKSHIFT6
+00001052  FFFF FFFF                 35      SIMHALT
+00001056                            36      
+00001056                            37  DEST
+00001056  43F9 0000129A             38      LEA     REGMSG,A1
+0000105C  103C 000E                 39      MOVE.B  #14,D0
+00001060  4E4F                      40      TRAP    #15
+00001062  3239 0000127A             41      MOVE.W  (MOCKA),D1
+00001068  C27C 0007                 42      AND.W   #7,D1
+0000106C  143C 0010                 43      MOVE.B  #16,D2
+00001070  103C 000F                 44      MOVE.B  #15,D0
+00001074  4E4F                      45      TRAP    #15
+00001076  43F9 000012A0             46      LEA     CPAREN,A1
+0000107C  103C 000E                 47      MOVE.B  #14,D0
+00001080  4E4F                      48      TRAP    #15
+00001082  60C6                      49      BRA     BACKSHIFT5
+00001084                            50      
+00001084  363C 0020                 51  IR  MOVE.W  #$20,D3
+00001088  C679 0000127A             52      AND.W   (MOCKA),D3
+0000108E  B67C 0020                 53      CMP.W   #$20,D3
+00001092  6700 003C                 54      BEQ     REG
+00001096  6000 0040                 55      BRA     IMM
+0000109A                            56  IRBACK
+0000109A  103C 000E                 57      MOVE.B  #14,D0
+0000109E  4E4F                      58      TRAP    #15
+000010A0  3239 0000127A             59      MOVE.W  (MOCKA),D1
+000010A6  E049                      60      LSR.W   #8,D1
+000010A8  E249                      61      LSR.W   #1,D1
+000010AA  C27C 0007                 62      AND.W   #7,D1
+000010AE  143C 0010                 63      MOVE.B  #16,D2
+000010B2  103C 000F                 64      MOVE.B  #15,D0
+000010B6  4E4F                      65      TRAP    #15
+000010B8  B63C 0020                 66      CMP.B   #$20,D3
+000010BC  6700 0022                 67      BEQ     IMM2  
+000010C0                            68  IRBACK2
+000010C0  43F9 000012A2             69      LEA     COMMA,A1
+000010C6  103C 000E                 70      MOVE.B  #14,D0
+000010CA  4E4F                      71      TRAP    #15
+000010CC  6000 FF78                 72      BRA     SHIFTBACK4
+000010D0  43F9 0000129A             73  REG LEA     REGMSG,A1
+000010D6  60C2                      74      BRA     IRBACK
+000010D8                            75  
+000010D8  43F9 0000129D             76  IMM LEA     IMMSG,A1
+000010DE  60BA                      77      BRA     IRBACK
+000010E0                            78  IMM2
+000010E0  43F9 000012A0             79      LEA     CPAREN,A1
+000010E6  103C 000E                 80      MOVE.B  #14,D0
+000010EA  4E4F                      81      TRAP    #15
+000010EC  60D2                      82      BRA     IRBACK2
+000010EE                            83      
+000010EE                            84  SIZE
+000010EE  303C 00C0                 85      MOVE.W  #$00C0,D0
+000010F2  C079 0000127A             86      AND.W   (MOCKA),D0
+000010F8  B07C 0080                 87      CMP.W   #$0080,D0
+000010FC  6700 0032                 88      BEQ     LONG
+00001100  303C 0040                 89      MOVE.W  #$0040,D0
+00001104  C079 0000127A             90      AND.W   (MOCKA),D0
+0000110A  B07C 0040                 91      CMP.W   #$0040,D0
+0000110E  6700 0018                 92      BEQ     WORD
+00001112  6000 000C                 93      BRA     BYTE
+00001116                            94  SIZEBACK
+00001116  103C 000E                 95      MOVE.B  #14,D0
+0000111A  4E4F                      96      TRAP    #15
+0000111C  6000 FF24                 97      BRA     BACKSHIFT3
+00001120                            98      
+00001120                            99  BYTE
+00001120  43F9 00001288            100      LEA     BMSG,A1
+00001126  60EE                     101      BRA     SIZEBACK
+00001128                           102  
+00001128                           103  WORD
+00001128  43F9 0000128E            104      LEA     WMSG,A1
+0000112E  60E6                     105      BRA     SIZEBACK
+00001130                           106     
+00001130                           107  LONG
+00001130  43F9 00001294            108      LEA     LONGMSG,A1
+00001136  60DE                     109      BRA     SIZEBACK
+00001138                           110      
+00001138                           111  DIRC
+00001138  303C 0100                112      MOVE.W  #$0100,D0
+0000113C  C079 0000127A            113      AND.W   (MOCKA),D0
+00001142  B07C 0100                114      CMP.W   #$0100,D0
+00001146  6700 0010                115      BEQ     LEFT
+0000114A  6600 0014                116      BNE     RIGHT
+0000114E                           117  BACKD
+0000114E  103C 000E                118      MOVE.B  #14,D0
+00001152  4E4F                     119      TRAP    #15
+00001154  6000 FED6                120      BRA     BACKSHIFT2
+00001158                           121      
+00001158                           122  LEFT
+00001158  43F9 00001284            123      LEA     LMSG,A1
+0000115E  60EE                     124      BRA     BACKD
+00001160                           125  RIGHT
+00001160  43F9 00001286            126      LEA     RMSG,A1
+00001166  60E6                     127      BRA     BACKD
+00001168                           128      
+00001168                           129      
+00001168  303C 0008                130  LA  MOVE.W  #8,D0
+0000116C  C079 0000127A            131      AND.W   (MOCKA),D0
+00001172  B03C 0008                132      CMP.B   #8,D0
+00001176  6700 0010                133      BEQ     LOGICAL
+0000117A  6600 0014                134      BNE     ARITHMETIC
+0000117E                           135  BACKLA
+0000117E  103C 000E                136      MOVE.B  #14,D0
+00001182  4E4F                     137      TRAP    #15
+00001184  6000 FEA2                138      BRA     BACKSHIFT1
+00001188                           139  LOGICAL
+00001188  43F9 0000127E            140      LEA     LOGICMESG,A1
+0000118E  60EE                     141      BRA     BACKLA
+00001190                           142  ARITHMETIC
+00001190  43F9 00001281            143      LEA     ARITHMESG,A1
+00001196  60E6                     144      BRA     BACKLA
+00001198                           145  
+00001198                           146  MEMORYSHIFT
+00001198  103C 000E                147      MOVE.B  #14,D0
+0000119C  43F9 000012AC            148      LEA     TAB,A1
+000011A2  4E4F                     149      TRAP    #15
+000011A4  103C 0038                150      MOVE.B  #$38,D0
+000011A8  C079 0000127A            151      AND.W   (MOCKA),D0
+000011AE  B03C 0038                152      CMP.B   #$38,D0
+000011B2  6700 0066                153      BEQ     ABSOLUTE
+000011B6  303C 0010                154      MOVE.W  #$10,D0
+000011BA  C079 0000127A            155      AND.W   (MOCKA),D0
+000011C0  B07C 0020                156      CMP.W   #$20,D0
+000011C4  6700 00A0                157      BEQ     PREDEC
+000011C8  43F9 000012A4            158  BMS LEA     OPAREN,A1 --Open Paranthese
+000011CE  103C 000E                159      MOVE.B  #14,D0
+000011D2  4E4F                     160      TRAP    #15
+000011D4  60F2                     161      BRA     BMS  
+000011D6  123C 0007                162      MOVE.B  #7,D1  --Number Calculations
+000011DA  C279 0000127A            163      AND.W   (MOCKA),D1
+000011E0  143C 0010                164      MOVE.B  #16,D2
+000011E4  103C 000F                165      MOVE.B  #15,D0
+000011E8  4E4F                     166      TRAP    #15
+000011EA  43F9 000012A0            167      LEA     CPAREN,A1 --Closing paranthese
+000011F0  103C 000E                168      MOVE.B  #14,D0
+000011F4  4E4F                     169      TRAP    #15
+000011F6  103C 0008                170      MOVE.B  #8,D0
+000011FA  C079 0000127A            171      AND.W   (MOCKA),D0
+00001200  B03C 0008                172      CMP.B   #8,D0
+00001204  6700 0006                173      BEQ     PLUS
+00001208                           174  BMS2
+00001208  6000 FE48                175      BRA     BACKSHIFT6
+0000120C                           176  PLUS
+0000120C  43F9 000012A8            177      LEA     PPLUS,A1
+00001212  103C 000E                178      MOVE.B  #14,D0
+00001216  4E4F                     179      TRAP    #15
+00001218  60EE                     180      BRA     BMS2
+0000121A                           181      
+0000121A                           182  
+0000121A                           183  ABSOLUTE
+0000121A  43F9 000012AA            184      LEA     DOLLAR,A1
+00001220  103C 000E                185      MOVE.B  #14,D0
+00001224  4E4F                     186      TRAP    #15
+00001226  103C 0001                187      MOVE.B  #1,D0
+0000122A  C079 0000127A            188      AND.W   (MOCKA),D0
+00001230  B03C 0001                189      CMP.B   #1,D0
+00001234  6700 0014                190      BEQ     AALONG
+00001238  6000 001E                191      BRA     AAWORD
+0000123C                           192  BACKA
+0000123C  103C 000F                193      MOVE.B  #15,D0
+00001240  143C 0010                194      MOVE.B  #16,D2
+00001244  4E4F                     195      TRAP    #15
+00001246  6000 FE0A                196      BRA     BACKSHIFT6
+0000124A                           197      
+0000124A                           198  AALONG
+0000124A  41F9 0000127A            199      LEA     MOCKA,A0
+00001250  D0FC 0010                200      ADDA.W  #$10,A0
+00001254  2210                     201      MOVE.L  (A0),D1
+00001256  60E4                     202      BRA     BACKA
+00001258                           203      
+00001258                           204  AAWORD
+00001258  41F9 0000127A            205      LEA     MOCKA,A0
+0000125E  D0FC 0010                206      ADDA.W  #$10,A0
+00001262  3210                     207      MOVE.W  (A0),D1
+00001264  60D6                     208      BRA     BACKA
+00001266                           209      
+00001266                           210  PREDEC
+00001266  43F9 000012A6            211      LEA     MINUS,A1
+0000126C  103C 000E                212      MOVE.B  #14,D0
+00001270  4E4F                     213      TRAP    #15
+00001272  6000 FF54                214      BRA     BMS
+00001276                           215  
+00001276                           216      
+00001276  FFFF FFFF                217      SIMHALT             ; halt simulator
+0000127A                           218  
+0000127A                           219  * Put variables and constants here
+0000127A                           220  MOCKA   DS.W    2
+0000127E= 4C 53 00                 221  LOGICMESG   DC.B    'LS',0
+00001281= 41 53 00                 222  ARITHMESG   DC.B    'AS',0
+00001284= 4C 00                    223  LMSG        DC.B    'L',0
+00001286= 52 00                    224  RMSG        DC.B    'R',0
+00001288= 2E 42 20 20 20 00        225  BMSG        DC.B    '.B   ',0
+0000128E= 2E 57 20 20 20 00        226  WMSG        DC.B    '.W   ',0
+00001294= 2E 4C 20 20 20 00        227  LONGMSG     DC.B    '.L   ',0
+0000129A= 44 28 00                 228  REGMSG      DC.B    'D(',0
+0000129D= 23 24 00                 229  IMMSG       DC.B    '#$',0
+000012A0= 29 00                    230  CPAREN      DC.B    ')',0
+000012A2= 2C 00                    231  COMMA       DC.B    ',',0
+000012A4= 28 00                    232  OPAREN      DC.B    '(',0
+000012A6= 2D 00                    233  MINUS       DC.B    '-',0
+000012A8= 2B 00                    234  PPLUS       DC.B    '+',0
+000012AA= 24 00                    235  DOLLAR      DC.B    '$',0
+000012AC= 20 20 20 00              236  TAB         DC.B    '   ',0
+000012B0                           237      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+AALONG              124A
+AAWORD              1258
+ABSOLUTE            121A
+ARITHMESG           1281
+ARITHMETIC          1190
+BACKA               123C
+BACKD               114E
+BACKLA              117E
+BACKSHIFT1          1028
+BACKSHIFT2          102C
+BACKSHIFT3          1042
+BACKSHIFT5          104A
+BACKSHIFT6          1052
+BMS                 11C8
+BMS2                1208
+BMSG                1288
+BYTE                1120
+COMMA               12A2
+CPAREN              12A0
+DEST                1056
+DIRC                1138
+DOLLAR              12AA
+IMM                 10D8
+IMM2                10E0
+IMMSG               129D
+IR                  1084
+IRBACK              109A
+IRBACK2             10C0
+LA                  1168
+LEFT                1158
+LMSG                1284
+LOGICAL             1188
+LOGICMESG           127E
+LONG                1130
+LONGMSG             1294
+MEMORYSHIFT         1198
+MINUS               12A6
+MOCKA               127A
+OPAREN              12A4
+PLUS                120C
+PPLUS               12A8
+PREDEC              1266
+REG                 10D0
+REGMSG              129A
+RIGHT               1160
+RMSG                1286
+SHIFT               1024
+SHIFTBACK4          1046
+SIZE                10EE
+SIZEBACK            1116
+START               1000
+TAB                 12AC
+WMSG                128E
+WORD                1128
